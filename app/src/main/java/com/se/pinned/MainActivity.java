@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void addItem(View view){
         String task = inputTask.getText().toString();
-        if(task != null){
+        if(!task.isEmpty()){
             taskList.add(task);
             arrayAdapter.notifyDataSetChanged();
 
