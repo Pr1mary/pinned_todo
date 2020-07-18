@@ -52,10 +52,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addItem(View view){
-        taskList.add(inputTask.getText().toString());
-        arrayAdapter.notifyDataSetChanged();
+        String task = inputTask.getText().toString();
+        if(task != null){
+            taskList.add(task);
+            arrayAdapter.notifyDataSetChanged();
 
-        inputTask.setText("");
-        Toast.makeText(currCtx, "Task Pinned!", Toast.LENGTH_SHORT).show();
+            inputTask.setText("");
+            Toast.makeText(currCtx, "Task Pinned!", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(currCtx, "New task is empty!", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 }
