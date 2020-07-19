@@ -3,6 +3,7 @@ package com.se.pinned;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     EditText inputTask;
     Context currCtx;
+
+    SharedPreferences sharedPref;
+    Set<String> taskData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
