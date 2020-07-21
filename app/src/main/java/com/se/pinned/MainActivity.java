@@ -22,8 +22,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<Object> taskList;
-    ArrayAdapter<Object> arrayAdapter;
+    ArrayList<String> taskList = new ArrayList<>();
+    ArrayAdapter<String> arrayAdapter;
     ListView listView;
     EditText inputTask;
     Context currCtx;
@@ -38,10 +38,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         currCtx = this;
-        taskList = new ArrayList<>();
         arrayAdapter = new ArrayAdapter<>(this, R.layout.task_list_layout, taskList);
         tinyDB = new TinyDB(currCtx);
+
 //        sharedPref = getPreferences(MODE_PRIVATE);
+
 
         listView = findViewById(R.id.task_list);
         listView.setAdapter(arrayAdapter);
@@ -57,12 +58,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        if(!taskList.isEmpty()) loadItem();
-
+        loadItem();
         inputTask = findViewById(R.id.input_task);
-
-        //load item list
 
     }
 
@@ -77,13 +74,11 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(currCtx, "Task Pinned!", Toast.LENGTH_SHORT).show();
 
             //save task list to shared preferences
-            tinyDB.putListObject("TaskData", taskList);
+            tinyDB.putListString("TaskData", taskList);
 
         }else{
             Toast.makeText(currCtx, "New task is empty!", Toast.LENGTH_SHORT).show();
         }
-
-
 
 //        Editor prefsEditor = sharedPref.edit();
 //        Gson gson = new Gson();
@@ -95,7 +90,8 @@ public class MainActivity extends AppCompatActivity {
 
     //load item list from sharedpreferences
     private void loadItem(){
-        taskList = tinyDB.getListObject("TaskData", taskList.getClass());
+        taskList = tinyDB.getListString("TaskData");
+        arrayAdapter.notifyDataSetChanged();
 
 //        Gson gson = new Gson();
 //        String json = sharedPref.getString("TaskData", "");
