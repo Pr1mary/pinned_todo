@@ -27,9 +27,6 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     EditText inputTask;
     Context currCtx;
-
-//    SharedPreferences sharedPref;
-
     TinyDB tinyDB;
 
     @Override
@@ -41,23 +38,24 @@ public class MainActivity extends AppCompatActivity {
         arrayAdapter = new ArrayAdapter<>(this, R.layout.task_list_layout, taskList);
         tinyDB = new TinyDB(currCtx);
 
-//        sharedPref = getPreferences(MODE_PRIVATE);
-
-
         listView = findViewById(R.id.task_list);
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 TextView taskView = (TextView) view;
-
+                //remove string from taskList
                 taskList.remove(taskView.getText().toString());
+                //update the listview
                 arrayAdapter.notifyDataSetChanged();
+                //update data on sharedpreferences
+                tinyDB.putListString("TaskData", taskList);
 
                 Toast.makeText(currCtx, "Task finished!", Toast.LENGTH_SHORT).show();
 
             }
         });
+        //retrieve data from sharedpreferences
         loadItem();
         inputTask = findViewById(R.id.input_task);
 
@@ -67,35 +65,30 @@ public class MainActivity extends AppCompatActivity {
     public void addItem(View view){
         String task = inputTask.getText().toString();
         if(!task.isEmpty()){
+            //add todo_task to taskList
             taskList.add(task);
+            //update the listview
             arrayAdapter.notifyDataSetChanged();
-
-            inputTask.setText("");
-            Toast.makeText(currCtx, "Task Pinned!", Toast.LENGTH_SHORT).show();
-
             //save task list to shared preferences
             tinyDB.putListString("TaskData", taskList);
+            //reset input task
+            inputTask.setText("");
+
+            Toast.makeText(currCtx, "Task Pinned!", Toast.LENGTH_SHORT).show();
 
         }else{
             Toast.makeText(currCtx, "New task is empty!", Toast.LENGTH_SHORT).show();
         }
 
-//        Editor prefsEditor = sharedPref.edit();
-//        Gson gson = new Gson();
-//        String json = gson.toJson(taskList);
-//        prefsEditor.putString("TaskData", json);
-//        prefsEditor.commit();
-
     }
 
-    //load item list from sharedpreferences
+    //retrieve item list from sharedpreferences
     private void loadItem(){
-        taskList = tinyDB.getListString("TaskData");
+        //use .addAll instead "=" to assign data list from sharedpreferences to arraylist
+        //retrieve data from sharedpreferences to taskList
+        taskList.addAll(tinyDB.getListString("TaskData"));
+        //update the listview
         arrayAdapter.notifyDataSetChanged();
-
-//        Gson gson = new Gson();
-//        String json = sharedPref.getString("TaskData", "");
-//        taskList = gson.fromJson(json, taskList.getClass());
 
     }
 
