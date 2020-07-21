@@ -1,2 +1,2 @@
 # pinned_todo
-Simple todo list app for android created with android studio
+Pinned! is a simple todo list app for android created
