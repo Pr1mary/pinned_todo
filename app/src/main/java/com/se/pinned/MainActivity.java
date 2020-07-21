@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -21,7 +22,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    List<String> taskList;
+    ArrayList<String> taskList;
     ArrayAdapter<String> arrayAdapter;
     ListView listView;
     EditText inputTask;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         inputTask = findViewById(R.id.input_task);
 
         //load item list
-        loadItem();
+        if(!taskList.isEmpty()) loadItem();
     }
 
     //add item to the list
@@ -69,16 +70,16 @@ public class MainActivity extends AppCompatActivity {
             inputTask.setText("");
             Toast.makeText(currCtx, "Task Pinned!", Toast.LENGTH_SHORT).show();
 
-            //save task list to shared preferences
-            SharedPreferences.Editor prefsEditor =  sharedPref.edit();
-            Gson gson = new Gson();
-            String json = gson.toJson(taskList);
-            prefsEditor.putString("TaskData", json);
-            prefsEditor.commit();
-
         }else{
             Toast.makeText(currCtx, "New task is empty!", Toast.LENGTH_SHORT).show();
         }
+
+        //save task list to shared preferences
+        Editor prefsEditor = sharedPref.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(taskList);
+        prefsEditor.putString("TaskData", json);
+        prefsEditor.commit();
 
     }
 
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         Gson gson = new Gson();
         String json = sharedPref.getString("TaskData", "");
         taskList = gson.fromJson(json, taskList.getClass());
+
     }
 
 }
