@@ -22,13 +22,16 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<String> taskList;
-    ArrayAdapter<String> arrayAdapter;
+    ArrayList<Object> taskList;
+    ArrayAdapter<Object> arrayAdapter;
     ListView listView;
     EditText inputTask;
     Context currCtx;
 
-    SharedPreferences sharedPref;
+//    SharedPreferences sharedPref;
+
+    TinyDB tinyDB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,9 +40,8 @@ public class MainActivity extends AppCompatActivity {
         currCtx = this;
         taskList = new ArrayList<>();
         arrayAdapter = new ArrayAdapter<>(this, R.layout.task_list_layout, taskList);
+        tinyDB = new TinyDB(currCtx);
 //        sharedPref = getPreferences(MODE_PRIVATE);
-
-
 
         listView = findViewById(R.id.task_list);
         listView.setAdapter(arrayAdapter);
@@ -56,10 +58,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        if(!taskList.isEmpty()) loadItem();
+
         inputTask = findViewById(R.id.input_task);
 
         //load item list
-        if(!taskList.isEmpty()) loadItem();
+
     }
 
     //add item to the list
@@ -72,24 +76,30 @@ public class MainActivity extends AppCompatActivity {
             inputTask.setText("");
             Toast.makeText(currCtx, "Task Pinned!", Toast.LENGTH_SHORT).show();
 
+            //save task list to shared preferences
+            tinyDB.putListObject("TaskData", taskList);
+
         }else{
             Toast.makeText(currCtx, "New task is empty!", Toast.LENGTH_SHORT).show();
         }
 
-        //save task list to shared preferences
-        Editor prefsEditor = sharedPref.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(taskList);
-        prefsEditor.putString("TaskData", json);
-        prefsEditor.commit();
+
+
+//        Editor prefsEditor = sharedPref.edit();
+//        Gson gson = new Gson();
+//        String json = gson.toJson(taskList);
+//        prefsEditor.putString("TaskData", json);
+//        prefsEditor.commit();
 
     }
 
     //load item list from sharedpreferences
     private void loadItem(){
-        Gson gson = new Gson();
-        String json = sharedPref.getString("TaskData", "");
-        taskList = gson.fromJson(json, taskList.getClass());
+        taskList = tinyDB.getListObject("TaskData", taskList.getClass());
+
+//        Gson gson = new Gson();
+//        String json = sharedPref.getString("TaskData", "");
+//        taskList = gson.fromJson(json, taskList.getClass());
 
     }
 
