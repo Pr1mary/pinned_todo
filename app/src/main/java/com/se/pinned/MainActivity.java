@@ -37,7 +37,9 @@ public class MainActivity extends AppCompatActivity {
         currCtx = this;
         taskList = new ArrayList<>();
         arrayAdapter = new ArrayAdapter<>(this, R.layout.task_list_layout, taskList);
-        sharedPref = getPreferences(MODE_PRIVATE);
+//        sharedPref = getPreferences(MODE_PRIVATE);
+
+
 
         listView = findViewById(R.id.task_list);
         listView.setAdapter(arrayAdapter);
