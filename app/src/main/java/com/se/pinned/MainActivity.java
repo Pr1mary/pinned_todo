@@ -1,11 +1,15 @@
 package com.se.pinned;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
@@ -29,10 +33,20 @@ public class MainActivity extends AppCompatActivity {
     Context currCtx;
     TinyDB tinyDB;
 
+//    Toast taskAddedToast;
+//    Toast taskFinishedToast;
+//    Toast taskRemovedToast;
+//    Toast taskEmptyToast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        taskAddedToast = Toast.makeText(currCtx, "Task Pinned!", Toast.LENGTH_SHORT);
+//        taskFinishedToast = Toast.makeText(currCtx, "Task finished!", Toast.LENGTH_SHORT);
+//        taskRemovedToast = Toast.makeText(this, "All task removed", Toast.LENGTH_SHORT);
+//        taskEmptyToast = Toast.makeText(this, "New task is empty!", Toast.LENGTH_SHORT);
 
         currCtx = this;
         arrayAdapter = new ArrayAdapter<>(this, R.layout.task_list_layout, taskList);
@@ -53,11 +67,44 @@ public class MainActivity extends AppCompatActivity {
 
                 Toast.makeText(currCtx, "Task finished!", Toast.LENGTH_SHORT).show();
 
+//                taskAddedToast.cancel();
+//                taskFinishedToast.show();
+//                taskRemovedToast.cancel();
+//                taskEmptyToast.cancel();
+
             }
         });
         //retrieve data from sharedpreferences
         loadItem();
         inputTask = findViewById(R.id.input_task);
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_list, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.deleteAll:
+                taskList.clear();
+                arrayAdapter.notifyDataSetChanged();
+                tinyDB.putListString("TaskData", taskList);
+
+                Toast.makeText(currCtx, "All task removed!", Toast.LENGTH_SHORT).show();
+
+//                taskAddedToast.cancel();
+//                taskFinishedToast.cancel();
+//                taskRemovedToast.show();
+//                taskEmptyToast.cancel();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 
     }
 
@@ -76,7 +123,17 @@ public class MainActivity extends AppCompatActivity {
 
             Toast.makeText(currCtx, "Task Pinned!", Toast.LENGTH_SHORT).show();
 
+//            taskAddedToast.show();
+//            taskFinishedToast.cancel();
+//            taskRemovedToast.cancel();
+//            taskEmptyToast.cancel();
+
         }else{
+//            taskAddedToast.cancel();
+//            taskFinishedToast.cancel();
+//            taskRemovedToast.cancel();
+//            taskEmptyToast.show();
+
             Toast.makeText(currCtx, "New task is empty!", Toast.LENGTH_SHORT).show();
         }
 
